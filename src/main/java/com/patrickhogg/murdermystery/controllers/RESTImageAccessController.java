@@ -1,13 +1,12 @@
 package com.patrickhogg.murdermystery.controllers;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Patrick Hogg
@@ -17,11 +16,19 @@ import java.net.URI;
 public class RESTImageAccessController {
 
     @GetMapping("/getImage/{name}/{id}")
-    public URI getImageFile(@PathVariable String name, @PathVariable int id)
+    @ResponseBody
+    public Map<String, String> getImageFile(@PathVariable String name,
+                                            @PathVariable int id)
             throws IOException {
+        String path = "/static/imgs/characters/" + name.toLowerCase() + "/" + id
+                      + ".jpg";
 
-        String path = "/imgs/characters/" + name + "/" + id + ".jpg";
-        return new ClassPathResource(path).getURI();
+        URI url = new ClassPathResource(path).getURI();
+        Map<String, String> urlMap = new HashMap<>();
+        urlMap.put("url", url.getPath());
+        System.out.println(urlMap);
+
+        return urlMap;
     }
 
 }
