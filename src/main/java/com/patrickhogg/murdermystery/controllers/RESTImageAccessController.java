@@ -1,10 +1,10 @@
 package com.patrickhogg.murdermystery.controllers;
 
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +20,11 @@ public class RESTImageAccessController {
     public Map<String, String> getImageFile(@PathVariable String name,
                                             @PathVariable int id)
             throws IOException {
-        String path = "/static/imgs/characters/" + name.toLowerCase() + "/" + id
+        String path = "static/imgs/characters/" + name.toLowerCase() + "/" + id
                       + ".jpg";
+        ResourceUtils.getURL("classpath:" + path);
 
-        URI url = new ClassPathResource(path).getURI();
+        URL url = ResourceUtils.getURL("classpath:" + path);
         Map<String, String> urlMap = new HashMap<>();
         urlMap.put("url", url.getPath());
         System.out.println(urlMap);
