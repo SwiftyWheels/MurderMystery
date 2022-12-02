@@ -5,26 +5,58 @@
 
 document.addEventListener("DOMContentLoaded", init);
 
-function init(){
-    const button = document.querySelector("#dialogueButton");
-    const dialogue = document.querySelector("#dialogue");
-    button.addEventListener("click", fetchDialogue);
+function init() {
+    const gameArea = document.querySelector(".game-area");
+    const imageBox = gameArea.querySelector(".image-box");
+    const currentImg = imageBox.querySelector("img");
+    const dialogueBox = gameArea.querySelector(".dialogue-box");
+    const button = dialogueBox.querySelector("#dialogueButton");
+    const dialogueParagraph = dialogueBox.querySelector("#dialogueParagraph");
 
-    async function fetchDialogue (){
-        const endPoint = "/getPersonDialogue/Test";
+    const notesBox = document.querySelector(".game .notes-area .notes-container");
+    const notesTextArea = notesBox.querySelector("#notes");
 
-        try{
+    button.addEventListener("click", () => updateScene(dialogueParagraph.dataset.speaker, notesTextArea.value));
+
+    // notesTextArea.addEventListener("input", () => updateNotes())
+
+    async function updateScene(name, text) {
+        await fetchDialogue(name);
+        await updateNotes(text)
+    }
+
+
+    async function fetchDialogue(name) {
+        const endPoint = "/api/dialogue/getPersonDialogue/" + name;
+        try {
             const response = await fetch(endPoint);
             if (response.ok) {
-                let p = document.createElement("p");
-                p.innerText = await response.text();
-                dialogue.appendChild(p);
+                if (dialogueParagraph) {
+                    const json = await response.json();
+                    const text = json.text;
+                    const id = json.id;
+                    const imgURI = "/imgs/characters/" + name + "/" + id + ".jpg";
+                    dialogueParagraph.innerText = text;
+                    dialogueParagraph.dataset.id = id;
+                    currentImg.src = imgURI;
+                }
             }
-        }catch (e) {
+        } catch (e) {
             let p = document.createElement("p");
             p.innerText = await e.text();
-            dialogue.appendChild(p);
+            p.appendChild(p);
         }
     }
 
+    async function updateNotes(text) {
+        const endPoint = "/api/notes/setNoteText/" + text;
+        try {
+            const response = await fetch(endPoint);
+            if (response.ok) {
+                console.log("Successfully updated notes!")
+            }
+        } catch (e) {
+            console.log("Could not update notes!");
+        }
+    }
 }

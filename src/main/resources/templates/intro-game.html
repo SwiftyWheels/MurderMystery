@@ -10,11 +10,38 @@
     <script th:src="@{/js/dialogueScripts.js}"></script>
 </head>
 <body>
+<header th:replace="fragments/fragments :: header"></header>
 <main>
-    <button id="dialogueButton">Click Me!</button>
-    <div id="dialogue">
-
+    <div class="game">
+        <div class="game-area">
+            <div class="player-info-container">
+                <div class="player-info">
+                    <ul>
+                        <li th:text="|Player: ${session.player.name}|"></li>
+                        <li th:text="|Age: ${session.player.age}|"></li>
+                        <li th:text="|Profession: ${session.player.profession}|"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="image-box">
+                <img alt="" src="/imgs/characters/narrator/intro.jpg">
+            </div>
+            <div class="dialogue-box" id="dialogueBox">
+                <p id="dialogueParagraph" data-id="0" data-speaker="Narrator">
+                    Press Continue to start the game.
+                </p>
+                <button id="dialogueButton">Continue</button>
+            </div>
+        </div>
+        <div class="notes-area">
+            <p>Investigation Notes</p>
+            <div class="notes-container">
+                <label for="notes"></label>
+                <textarea th:text="${notes.notes}" id="notes" rows="10" cols="25" name="notes"></textarea>
+            </div>
+        </div>
     </div>
 </main>
+<footer th:replace="fragments/fragments :: footer"></footer>
 </body>
 </html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 minimum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="Patrick Hogg">
+    <meta name="description"
+          content="describe what is the purpose of the current page
+                 and how it fits into the project (website or
+                 web app. Be generous with your description.">
+    <title>Fragments</title>
+    <!--
+        Author:       Patrick Hogg
+        Program:      fragments
+        Date:         12/1/2022
+        Updated:      [date last updated]
+        Version:      0.0
+        Purpose:      short description what the page (site) is all about
+        Description:  describe the solution in detail
+                      (include algorithm if applicable)
+                      - focus on the "why"
+-->
+</head>
+<body>
+<header th:fragment="header">
+    <a th:href="@{/}">Murder Mystery</a>
+</header>
+<footer th:fragment="footer">
+  <p>Copyright &copy; Patrick Hogg 2022</p>
+</footer>
+</body>
+</html>

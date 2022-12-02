@@ -17,7 +17,10 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
 
     @Override
     public DialogueList getPersonDialogueList(Person person) {
-        return personAccess.getPerson(person).getDialogueList();
+        if (person != null) {
+            return personAccess.getPerson(person).getDialogueList();
+        }
+        return null;
     }
 
     @Override
@@ -29,9 +32,11 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     public Dialogue getPersonDialogueByDialogueID(Person person,
                                                   int dialogueID) {
         Person personToGet = personAccess.getPerson(person);
-        for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
-            if (dialogue.getId() == dialogueID) {
-                return dialogue;
+        if (personToGet != null) {
+            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+                if (dialogue.getId() == dialogueID) {
+                    return dialogue;
+                }
             }
         }
         return null;
@@ -41,9 +46,11 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     public Dialogue getPersonDialogueByDialogueID(String personName,
                                                   int dialogueID) {
         Person personToGet = personAccess.getPersonByName(personName);
-        for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
-            if (dialogue.getId() == dialogueID) {
-                return dialogue;
+        if (personToGet != null) {
+            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+                if (dialogue.getId() == dialogueID) {
+                    return dialogue;
+                }
             }
         }
         return null;
@@ -52,9 +59,11 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     @Override
     public Dialogue getPersonNextUnreadDialogue(Person person) {
         Person personToGet = personAccess.getPerson(person);
-        for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
-            if (!dialogue.isRead()) {
-                return dialogue;
+        if (personToGet != null) {
+            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+                if (!dialogue.isRead()) {
+                    return dialogue;
+                }
             }
         }
         return null;
@@ -63,9 +72,11 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     @Override
     public Dialogue getPersonNextUnreadDialogue(String personName) {
         Person personToGet = personAccess.getPersonByName(personName);
-        for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
-            if (!dialogue.isRead()) {
-                return dialogue;
+        if (personToGet != null) {
+            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+                if (!dialogue.isRead()) {
+                    return dialogue;
+                }
             }
         }
         return null;
@@ -74,10 +85,12 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     @Override
     public Dialogue getPersonDialogue(Person person, Dialogue dialogue) {
         Person personToGet = personAccess.getPerson(person);
-        for (Dialogue currentDialogue : personToGet.getDialogueList()
-                                                   .getDialogues()) {
-            if (currentDialogue.equals(dialogue)) {
-                return currentDialogue;
+        if (personToGet != null) {
+            for (Dialogue currentDialogue : personToGet.getDialogueList()
+                                                       .getDialogues()) {
+                if (currentDialogue.equals(dialogue)) {
+                    return currentDialogue;
+                }
             }
         }
         return null;
@@ -86,10 +99,12 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     @Override
     public Dialogue getPersonDialogue(String personName, Dialogue dialogue) {
         Person personToGet = personAccess.getPersonByName(personName);
-        for (Dialogue currentDialogue : personToGet.getDialogueList()
-                                                   .getDialogues()) {
-            if (currentDialogue.equals(dialogue)) {
-                return currentDialogue;
+        if (personToGet != null) {
+            for (Dialogue currentDialogue : personToGet.getDialogueList()
+                                                       .getDialogues()) {
+                if (currentDialogue.equals(dialogue)) {
+                    return currentDialogue;
+                }
             }
         }
         return null;
@@ -98,14 +113,18 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     @Override
     public void setPersonDialogueAsRead(Person person, Dialogue dialogue) {
         Person personToGet = personAccess.getPerson(person);
-        Dialogue dialogueToGet = getPersonDialogue(personToGet, dialogue);
-        dialogueToGet.setRead(true);
+        if (personToGet != null) {
+            Dialogue dialogueToGet = getPersonDialogue(personToGet, dialogue);
+            dialogueToGet.setRead(true);
+        }
     }
 
     @Override
     public void setPersonDialogueAsRead(String personName, Dialogue dialogue) {
         Person personToGet = personAccess.getPersonByName(personName);
-        Dialogue dialogueToGet = getPersonDialogue(personToGet, dialogue);
-        dialogueToGet.setRead(true);
+        if (personToGet != null) {
+            Dialogue dialogueToGet = getPersonDialogue(personToGet, dialogue);
+            dialogueToGet.setRead(true);
+        }
     }
 }
