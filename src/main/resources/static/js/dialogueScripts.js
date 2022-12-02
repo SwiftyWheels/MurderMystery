@@ -23,11 +23,11 @@ function init() {
     async function updateScene(name, text) {
         await fetchDialogue(name);
         await updateNotes(text);
-        await fetchImage(name, dialogueParagraph.dataset.id);
     }
 
 
     async function fetchDialogue(name) {
+        name = name.toLowerCase();
         const endPoint = "/api/dialogue/getPersonDialogue/" + name;
         try {
             const response = await fetch(endPoint);
@@ -38,6 +38,7 @@ function init() {
                     const id = json.id;
                     dialogueParagraph.innerText = text;
                     dialogueParagraph.dataset.id = id;
+                    currentImg.src = "/imgs/characters/"+name+"/"+id+".jpg";
                 }
             }
         } catch (e) {
