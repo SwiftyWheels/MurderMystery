@@ -3,17 +3,22 @@ package com.patrickhogg.murdermystery.dao;
 import com.patrickhogg.murdermystery.model.Dialogue;
 import com.patrickhogg.murdermystery.model.DialogueList;
 import com.patrickhogg.murdermystery.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import com.patrickhogg.murdermystery.service.PersonAccessServiceImpl;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Patrick Hogg
  */
-@Repository
-public class PersonDialogueAccessImpl implements PersonDialogueAccess{
+public class PersonDialogueAccessImpl
+        implements PersonDialogueAccess, Serializable {
 
-    @Autowired
-    PersonAccessImpl personAccess;
+    private final PersonAccessServiceImpl personAccess;
+
+    public PersonDialogueAccessImpl(PersonAccessServiceImpl personAccess) {
+        this.personAccess = personAccess;
+    }
 
     @Override
     public DialogueList getPersonDialogueList(Person person) {
@@ -33,7 +38,8 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
                                                   int dialogueID) {
         Person personToGet = personAccess.getPerson(person);
         if (personToGet != null) {
-            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+            for (Dialogue dialogue : personToGet.getDialogueList()
+                                                .getDialogues()) {
                 if (dialogue.getId() == dialogueID) {
                     return dialogue;
                 }
@@ -47,7 +53,8 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
                                                   int dialogueID) {
         Person personToGet = personAccess.getPersonByName(personName);
         if (personToGet != null) {
-            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+            for (Dialogue dialogue : personToGet.getDialogueList()
+                                                .getDialogues()) {
                 if (dialogue.getId() == dialogueID) {
                     return dialogue;
                 }
@@ -60,7 +67,8 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     public Dialogue getPersonNextUnreadDialogue(Person person) {
         Person personToGet = personAccess.getPerson(person);
         if (personToGet != null) {
-            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+            for (Dialogue dialogue : personToGet.getDialogueList()
+                                                .getDialogues()) {
                 if (!dialogue.isRead()) {
                     return dialogue;
                 }
@@ -73,7 +81,8 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
     public Dialogue getPersonNextUnreadDialogue(String personName) {
         Person personToGet = personAccess.getPersonByName(personName);
         if (personToGet != null) {
-            for (Dialogue dialogue : personToGet.getDialogueList().getDialogues()) {
+            for (Dialogue dialogue : personToGet.getDialogueList()
+                                                .getDialogues()) {
                 if (!dialogue.isRead()) {
                     return dialogue;
                 }
@@ -126,5 +135,21 @@ public class PersonDialogueAccessImpl implements PersonDialogueAccess{
             Dialogue dialogueToGet = getPersonDialogue(personToGet, dialogue);
             dialogueToGet.setRead(true);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PersonDialogueAccessImpl that)) {
+            return false;
+        }
+        return Objects.equals(personAccess, that.personAccess);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personAccess);
     }
 }

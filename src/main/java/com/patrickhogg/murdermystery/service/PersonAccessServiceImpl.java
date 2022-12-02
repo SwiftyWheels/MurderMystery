@@ -2,19 +2,22 @@ package com.patrickhogg.murdermystery.service;
 
 import com.patrickhogg.murdermystery.dao.PersonAccessImpl;
 import com.patrickhogg.murdermystery.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Patrick Hogg
  */
-@Service
-public class PersonAccessServiceImpl implements PersonAccessService{
+public class PersonAccessServiceImpl implements PersonAccessService,
+                                                Serializable {
 
-    @Autowired
-    private PersonAccessImpl personAccess;
+    private final PersonAccessImpl personAccess;
+
+    public PersonAccessServiceImpl(PersonAccessImpl personAccess) {
+        this.personAccess = personAccess;
+    }
 
     @Override
     public void addPerson(Person person) {
@@ -39,5 +42,27 @@ public class PersonAccessServiceImpl implements PersonAccessService{
     @Override
     public Person getMurderer() {
         return personAccess.getMurderer();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PersonAccessServiceImpl that)) {
+            return false;
+        }
+        return Objects.equals(personAccess, that.personAccess);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personAccess);
+    }
+
+    @Override
+    public String toString() {
+        return "PersonAccessServiceImpl{" + "personAccess=" + personAccess
+               + '}';
     }
 }

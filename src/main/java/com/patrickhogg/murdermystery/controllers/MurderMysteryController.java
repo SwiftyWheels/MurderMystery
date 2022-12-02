@@ -6,10 +6,6 @@ import com.patrickhogg.murdermystery.model.Note;
 import com.patrickhogg.murdermystery.model.Person;
 import com.patrickhogg.murdermystery.model.Player;
 import com.patrickhogg.murdermystery.model.enums.Gender;
-import com.patrickhogg.murdermystery.service.NotesAccessService;
-import com.patrickhogg.murdermystery.service.PersonAccessServiceImpl;
-import com.patrickhogg.murdermystery.service.PersonDialogueAccessServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,21 +24,13 @@ import java.util.List;
 @Controller
 public class MurderMysteryController {
 
-    @Autowired
-    private PersonAccessServiceImpl personAccess;
-
-    @Autowired
-    private PersonDialogueAccessServiceImpl dialogueAccess;
-
-    @Autowired
-    private NotesAccessService notesAccess;
-
     @GetMapping("/")
     public String getIndex(HttpSession session, Model model) {
-        session.setAttribute("player", new Player());
+        Player player = new Player();
+        System.out.println(player);
+
+        session.setAttribute("player",player);
         session.setAttribute("hasStarted",false);
-        Player player = (Player) session.getAttribute("player");
-        notesAccess.setNote("Enter notes here...");
 
         model.addAttribute("player", player);
         return "index";
@@ -52,16 +40,24 @@ public class MurderMysteryController {
     public String getStartGame(@ModelAttribute Player player, Model model,
                                HttpSession session) {
         session.setAttribute("player", player);
-        Note note = notesAccess.getNote();
-        System.out.println(note );
+        player = (Player) session.getAttribute("player");
+        System.out.println("Setting note");
+        player.getNotesAccessService().setNote("Enter notes here...");
+        System.out.println(player);
+
+        Note note = player.getNotesAccessService().getNote();
+        System.out.println("Note: " + note);
         boolean hasStarted = (boolean) session.getAttribute("hasStarted");
 
-        if ((personAccess.getAllPeople().isEmpty()) || !hasStarted) {
+
+        if ((player.getPersonAccessService().getAllPeople().isEmpty()) || !hasStarted) {
             initPeople(session);
             System.out.println("Initializing people");
             session.setAttribute("hasStarted",true);
         }
+
         if(note.getNotes() != null && !note.getNotes().isEmpty()){
+            System.out.println("Note: " + note);
             model.addAttribute("notes", note);
         }
 
@@ -72,6 +68,7 @@ public class MurderMysteryController {
 
 
     public void initPeople(HttpSession session) {
+        Player player = (Player) session.getAttribute("player");
         List<Person> personList = new LinkedList<>();
         Person narrator = new Person("Narrator", Gender.MALE, false, null);
         personList.add(narrator);
@@ -85,12 +82,13 @@ public class MurderMysteryController {
         personList.add(eve);
 
         for (Person person : personList) {
-            personAccess.addPerson(person);
+            player.getPersonAccessService().addPerson(person);
         }
         initDialogue(session);
     }
 
     public void initDialogue(HttpSession session) {
+        Player player = (Player) session.getAttribute("player");
         try {
             ResourceFileReaderImpl resourceFileReader
                     = new ResourceFileReaderImpl();
@@ -103,7 +101,7 @@ public class MurderMysteryController {
                     = resourceFileReader.getDialogueListFromFile(narratorFile,
                                                                  session);
 
-            Person narrator = personAccess.getPersonByName("Narrator");
+            Person narrator = player.getPersonAccessService().getPersonByName("Narrator");
             narrator.setDialogueList(narratorDialogue);
 
             // JOE

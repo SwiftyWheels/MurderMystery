@@ -4,18 +4,21 @@ import com.patrickhogg.murdermystery.dao.PersonDialogueAccessImpl;
 import com.patrickhogg.murdermystery.model.Dialogue;
 import com.patrickhogg.murdermystery.model.DialogueList;
 import com.patrickhogg.murdermystery.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Patrick Hogg
  */
-@Service
 public class PersonDialogueAccessServiceImpl
-        implements PersonDialogueAccessService {
+        implements PersonDialogueAccessService, Serializable {
+    private final PersonDialogueAccessImpl personDialogueAccess;
 
-    @Autowired
-    PersonDialogueAccessImpl personDialogueAccess;
+    public PersonDialogueAccessServiceImpl(
+            PersonDialogueAccessImpl personDialogueAccess) {
+        this.personDialogueAccess = personDialogueAccess;
+    }
 
     @Override
     public DialogueList getPersonDialogueList(Person person) {
@@ -83,5 +86,27 @@ public class PersonDialogueAccessServiceImpl
     @Override
     public void setPersonDialogueAsRead(String personName, Dialogue dialogue) {
         personDialogueAccess.setPersonDialogueAsRead(personName, dialogue);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PersonDialogueAccessServiceImpl that)) {
+            return false;
+        }
+        return Objects.equals(personDialogueAccess, that.personDialogueAccess);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personDialogueAccess);
+    }
+
+    @Override
+    public String toString() {
+        return "PersonDialogueAccessServiceImpl{" + "personDialogueAccess="
+               + personDialogueAccess + '}';
     }
 }
