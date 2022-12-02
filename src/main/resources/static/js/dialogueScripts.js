@@ -47,11 +47,18 @@ function init() {
         }
     }
 
-    async function fetchImage(name, id) {
-        name = name.toLowerCase();
-        const img = " https://raw.githubusercontent.com/SwiftyWheels/MurderMystery/master/src/main/resources/static/imgs/characters/" + name + "/" + id + ".jpg";
+    async function fetchImage(name, id){
+        const endPoint = "/api/images/getImage/" + name + "/" + id;
         try {
-            currentImg.src = img;
+            const response = await fetch(endPoint);
+            if (response.ok) {
+                if (currentImg) {
+                    const json = await response.json();
+                    const url = json.url;
+                    await console.log(url);
+                    currentImg.src = url;
+                }
+            }
         } catch (e) {
             console.log(e);
         }

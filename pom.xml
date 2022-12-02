@@ -12,6 +12,7 @@
     <groupId>com.patrickhogg</groupId>
     <artifactId>MurderMystery</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>MurderMystery</name>
     <description>MurderMystery</description>
     <properties>
