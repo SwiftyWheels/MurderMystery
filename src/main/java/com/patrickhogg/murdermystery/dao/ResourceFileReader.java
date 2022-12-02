@@ -5,6 +5,7 @@ import com.patrickhogg.murdermystery.model.Player;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface ResourceFileReader {
 
     File getFileFromPath(String pathName, String fileName);
 
-    DialogueList getDialogueListFromFile(File file, HttpSession session);
+    DialogueList getDialogueListFromFile(InputStream file, HttpSession session);
 
     String replaceTemplateString(String pattern, String text,
                                  String replacement);

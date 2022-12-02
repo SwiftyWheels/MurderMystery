@@ -5,9 +5,7 @@ import com.patrickhogg.murdermystery.model.DialogueList;
 import com.patrickhogg.murdermystery.model.Player;
 
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -45,30 +43,32 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
     }
 
     @Override
-    public DialogueList getDialogueListFromFile(File file,
+    public DialogueList getDialogueListFromFile(InputStream file,
                                                 HttpSession session) {
         DialogueList dialogueList = new DialogueList();
         Player player = (Player) session.getAttribute("player");
-        if (file.exists()) {
-            try (BufferedReader bufferedReader = new BufferedReader(
-                    new FileReader(file))) {
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    String[] dialogueText = line.split("\\R");
-                    for (String text : dialogueText) {
-                        Dialogue dialogue = new Dialogue(dialogueList.getDialogues()
-                                                                     .size(),
-                                                         filterInputString(
-                                                                 player, text),
-                                                         false);
-                        dialogueList.addDialogue(dialogue);
+        try {
+            if (file.available() > 0) {
+                try (BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(file))) {
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        String[] dialogueText = line.split("\\R");
+                        for (String text : dialogueText) {
+                            Dialogue dialogue = new Dialogue(
+                                    dialogueList.getDialogues().size(),
+                                    filterInputString(player, text), false);
+                            dialogueList.addDialogue(dialogue);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                System.err.println("Can't load file! File doesn't exist!");
             }
-        } else {
-            System.err.println("Can't load file! File doesn't exist!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return dialogueList;
     }

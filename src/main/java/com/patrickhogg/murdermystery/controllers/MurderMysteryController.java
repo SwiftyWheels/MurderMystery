@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,8 +96,8 @@ public class MurderMysteryController {
                     = new ResourceFileReaderImpl();
 
             // NARRATOR
-            File narratorFile = new ClassPathResource(
-                    "/dialogues/characters/narrator/dialogue.txt").getFile();
+            InputStream narratorFile = new ClassPathResource(
+                    "/dialogues/characters/narrator/dialogue.txt").getInputStream();
 
             DialogueList narratorDialogue
                     = resourceFileReader.getDialogueListFromFile(narratorFile,
