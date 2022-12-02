@@ -22,7 +22,8 @@ function init() {
 
     async function updateScene(name, text) {
         await fetchDialogue(name);
-        await updateNotes(text)
+        await updateNotes(text);
+        await fetchImage(name, dialogueParagraph.dataset.id);
     }
 
 
@@ -35,16 +36,29 @@ function init() {
                     const json = await response.json();
                     const text = json.text;
                     const id = json.id;
-                    const imgURI = "/imgs/characters/" + name + "/" + id + ".jpg";
                     dialogueParagraph.innerText = text;
                     dialogueParagraph.dataset.id = id;
-                    currentImg.src = imgURI;
                 }
             }
         } catch (e) {
             let p = document.createElement("p");
             p.innerText = await e.text();
             p.appendChild(p);
+        }
+    }
+
+    async function fetchImage(name, id){
+        const endPoint = "/api/images/getImage/" + name + "/" + id;
+        try {
+            const response = await fetch(endPoint);
+            if (response.ok) {
+                if (currentImg) {
+                    const json = await response.json();
+                    currentImg.src = json.text;
+                }
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 
