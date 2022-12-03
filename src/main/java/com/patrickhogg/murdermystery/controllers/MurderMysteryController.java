@@ -1,10 +1,7 @@
 package com.patrickhogg.murdermystery.controllers;
 
 import com.patrickhogg.murdermystery.dao.ResourceFileReaderImpl;
-import com.patrickhogg.murdermystery.model.DialogueList;
-import com.patrickhogg.murdermystery.model.Note;
-import com.patrickhogg.murdermystery.model.Person;
-import com.patrickhogg.murdermystery.model.Player;
+import com.patrickhogg.murdermystery.model.*;
 import com.patrickhogg.murdermystery.model.enums.Gender;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
@@ -24,6 +21,8 @@ import java.util.List;
 @Controller
 public class MurderMysteryController {
 
+    private final ResourceFileReaderImpl resourceFileReader = new ResourceFileReaderImpl();
+
     @GetMapping("/")
     public String getIndex(HttpSession session, Model model) {
         Player player = new Player();
@@ -41,18 +40,23 @@ public class MurderMysteryController {
                                HttpSession session) {
         session.setAttribute("player", player);
         player = (Player) session.getAttribute("player");
-        System.out.println("Setting note");
         player.getNotesAccessService().setNote("Enter notes here...");
-        System.out.println(player);
 
         Note note = player.getNotesAccessService().getNote();
-        System.out.println("Note: " + note);
+
         boolean hasStarted = (boolean) session.getAttribute("hasStarted");
 
 
         if ((player.getPersonAccessService().getAllPeople().isEmpty()) || !hasStarted) {
             initPeople(session);
             System.out.println("Initializing people");
+            session.setAttribute("hasStarted",true);
+        }
+
+        if (player.getEventsAccessService().getEventList().getEvents() == null
+            || !hasStarted) {
+            initEvents(session);
+            System.out.println("Initializing events");
             session.setAttribute("hasStarted",true);
         }
 
@@ -90,8 +94,6 @@ public class MurderMysteryController {
     public void initDialogue(HttpSession session) {
         Player player = (Player) session.getAttribute("player");
         try {
-            ResourceFileReaderImpl resourceFileReader
-                    = new ResourceFileReaderImpl();
 
             // NARRATOR
             InputStream narratorFile = new ClassPathResource(
@@ -111,6 +113,22 @@ public class MurderMysteryController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public void initEvents(HttpSession session) {
+        Player player = (Player) session.getAttribute("player");
+        try {
+            InputStream eventsFile = new ClassPathResource(
+                    "/events/events.txt").getInputStream();
+
+            EventList eventList = resourceFileReader.getEventListFromFile(
+                    eventsFile);
+
+            player.getEventsAccessService().getEventsAccess().setEventList(
+                    eventList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

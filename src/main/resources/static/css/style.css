@@ -54,6 +54,7 @@ main .game{
     grid-template-areas:
             ".... .... .... ...."
             "game game game notes"
+            "game game game inventory"
             ".... .... .... ....";
 }
 
@@ -273,12 +274,23 @@ p  {
     justify-content: start;
     align-items: center;
     height: 100%;
-    overflow: scroll;
     border: 1px solid rgba(7, 7, 7, 0.4);
 }
 
 .notes-area textarea{
     white-space: pre-wrap;
+}
+
+/* Inventory Container Styles */
+.inventory-area{
+    grid-area: inventory;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    height: 100%;
+    overflow: scroll;
+    border: 1px solid rgba(7, 7, 7, 0.4);
 }
 
 /* Utility Styles */

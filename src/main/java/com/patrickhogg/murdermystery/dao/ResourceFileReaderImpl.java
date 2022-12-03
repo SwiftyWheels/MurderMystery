@@ -1,8 +1,6 @@
 package com.patrickhogg.murdermystery.dao;
 
-import com.patrickhogg.murdermystery.model.Dialogue;
-import com.patrickhogg.murdermystery.model.DialogueList;
-import com.patrickhogg.murdermystery.model.Player;
+import com.patrickhogg.murdermystery.model.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -71,6 +69,35 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
             e.printStackTrace();
         }
         return dialogueList;
+    }
+
+    @Override
+    public EventList getEventListFromFile(InputStream file) {
+        EventList eventList = new EventList();
+        try {
+            if (file.available() > 0) {
+                try (BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(file))) {
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        String[] eventText = line.split(",");
+                        String actor = eventText[0];
+                        String id = eventText[1];
+                        String url = eventText[2];
+                        Event event = new Event(actor, id, url);
+                        eventList.getEvents().add(event);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("Can't load file! File doesn't exist!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return eventList;
     }
 
     @Override

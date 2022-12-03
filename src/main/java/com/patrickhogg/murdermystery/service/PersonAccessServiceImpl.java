@@ -13,11 +13,7 @@ import java.util.Objects;
 public class PersonAccessServiceImpl implements PersonAccessService,
                                                 Serializable {
 
-    private final PersonAccessImpl personAccess;
-
-    public PersonAccessServiceImpl(PersonAccessImpl personAccess) {
-        this.personAccess = personAccess;
-    }
+    private final PersonAccessImpl personAccess = new PersonAccessImpl();
 
     @Override
     public void addPerson(Person person) {

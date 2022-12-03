@@ -1,11 +1,7 @@
 package com.patrickhogg.murdermystery.model;
 
-import com.patrickhogg.murdermystery.dao.NotesAccessImpl;
-import com.patrickhogg.murdermystery.dao.PersonAccessImpl;
 import com.patrickhogg.murdermystery.dao.PersonDialogueAccessImpl;
-import com.patrickhogg.murdermystery.service.NotesAccessServiceImpl;
-import com.patrickhogg.murdermystery.service.PersonAccessServiceImpl;
-import com.patrickhogg.murdermystery.service.PersonDialogueAccessServiceImpl;
+import com.patrickhogg.murdermystery.service.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,14 +14,20 @@ public class Player implements Serializable, Character {
     private int age;
     private String profession;
     private PersonAccessServiceImpl personAccessService
-            = new PersonAccessServiceImpl(new PersonAccessImpl());
+            = new PersonAccessServiceImpl();
 
     private NotesAccessServiceImpl notesAccessService
-            = new NotesAccessServiceImpl(new NotesAccessImpl());
+            = new NotesAccessServiceImpl();
 
     private PersonDialogueAccessServiceImpl personDialogueAccessService
             = new PersonDialogueAccessServiceImpl(
             new PersonDialogueAccessImpl(personAccessService));
+
+    private InventoryAccessServiceImpl inventoryAccessService
+            = new InventoryAccessServiceImpl();
+
+    private EventsAccessServiceImpl eventsAccessService
+            = new EventsAccessServiceImpl();
 
     public Player() {
         // no args constructor
@@ -82,6 +84,24 @@ public class Player implements Serializable, Character {
         this.personDialogueAccessService = personDialogueAccessService;
     }
 
+    public InventoryAccessServiceImpl getInventoryAccessService() {
+        return inventoryAccessService;
+    }
+
+    public void setInventoryAccessService(
+            InventoryAccessServiceImpl inventoryAccessService) {
+        this.inventoryAccessService = inventoryAccessService;
+    }
+
+    public EventsAccessServiceImpl getEventsAccessService() {
+        return eventsAccessService;
+    }
+
+    public void setEventsAccessService(
+            EventsAccessServiceImpl eventsAccessService) {
+        this.eventsAccessService = eventsAccessService;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -98,14 +118,20 @@ public class Player implements Serializable, Character {
                && Objects.equals(getNotesAccessService(),
                                  player.getNotesAccessService())
                && Objects.equals(getPersonDialogueAccessService(),
-                                 player.getPersonDialogueAccessService());
+                                 player.getPersonDialogueAccessService())
+               && Objects.equals(getInventoryAccessService(),
+                                 player.getInventoryAccessService())
+               && Objects.equals(getEventsAccessService(),
+                                 player.getEventsAccessService());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getAge(), getProfession(),
                             getPersonAccessService(), getNotesAccessService(),
-                            getPersonDialogueAccessService());
+                            getPersonDialogueAccessService(),
+                            getInventoryAccessService(),
+                            getEventsAccessService());
     }
 
     @Override
@@ -114,6 +140,8 @@ public class Player implements Serializable, Character {
                + ", profession='" + profession + '\'' + ", personAccessService="
                + personAccessService + ", notesAccessService="
                + notesAccessService + ", personDialogueAccessService="
-               + personDialogueAccessService + '}';
+               + personDialogueAccessService + ", inventoryAccessService="
+               + inventoryAccessService + ", eventsAccessService="
+               + eventsAccessService + '}';
     }
 }

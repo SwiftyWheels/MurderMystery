@@ -12,11 +12,7 @@ import java.util.Objects;
 public class NotesAccessServiceImpl implements NotesAccessService,
                                                Serializable {
 
-    private NotesAccessImpl notesAccess;
-
-    public NotesAccessServiceImpl(NotesAccessImpl notesAccess) {
-        this.notesAccess = notesAccess;
-    }
+    private NotesAccessImpl notesAccess = new NotesAccessImpl();
 
     @Override
     public Note getNote() {
