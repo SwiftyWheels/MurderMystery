@@ -253,7 +253,8 @@ p  {
     position: relative;
     grid-area: text;
     border: 1px solid rgba(7, 7, 7, 0.4);
-    grid-template-areas: ".... text text button ....";
+    grid-template-areas: ".... text text button ...."
+                         ".... option option option ...";
     align-items: center;
 }
 
@@ -264,6 +265,13 @@ p  {
 
 .dialogue-box button{
     grid-area: button;
+}
+
+.dialogue-box .dialogue-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    grid-area: option;
 }
 
 /* Notes Container Styles */

@@ -14,6 +14,7 @@ function init() {
     const dialogueBox = gameArea.querySelector(".dialogue-box");
     const button = dialogueBox.querySelector("#dialogueButton");
     const dialogueParagraph = dialogueBox.querySelector("#dialogueParagraph");
+    const dialogueOptions = dialogueBox.querySelector(".dialogue-options");
 
     // Notes Area
     const notesBox = document.querySelector(".game .notes-area .notes-container");
@@ -25,13 +26,14 @@ function init() {
     const inventoryList = inventoryContainer.querySelector(".inventory-list");
 
 
-    button.addEventListener("click", () => updateScene(dialogueParagraph.dataset.speaker, notesTextArea.value));
+    button.addEventListener("click", () => updateScene());
 
     // notesTextArea.addEventListener("input", () => updateNotes())
 
-    async function updateScene(name, text) {
-        await fetchDialogue(name);
-        await updateNotes(text);
+    async function updateScene() {
+        await fetchDialogue(dialogueParagraph.dataset.speaker);
+        await checkForOptionEvent(dialogueParagraph.dataset.id);
+        await updateNotes(notesTextArea.value);
         await checkForEvent(dialogueParagraph.dataset.speaker, dialogueParagraph.dataset.id);
         await updateInventory();
     }
@@ -48,7 +50,7 @@ function init() {
                     const id = json.id;
                     dialogueParagraph.innerText = text;
                     dialogueParagraph.dataset.id = id;
-                    currentImg.src = "/imgs/characters/"+name+"/"+id+".jpg";
+                    currentImg.src = "/imgs/characters/" + name + "/" + id + ".jpg";
                 }
             }
         } catch (e) {
@@ -69,9 +71,9 @@ function init() {
         }
     }
 
-    async function updateInventory(){
+    async function updateInventory() {
         const endPoint = "/api/inventory/getInventoryItems";
-        try{
+        try {
             const response = await fetch(endPoint);
             if (response.ok) {
                 const json = await response.json();
@@ -81,13 +83,13 @@ function init() {
                     createInventoryItemElement(inventoryElement.itemName);
                 }
             }
-        }catch (e) {
+        } catch (e) {
             console.log(e);
         }
     }
 
-    function createInventoryItemElement(text){
-        if (inventoryList){
+    function createInventoryItemElement(text) {
+        if (inventoryList) {
             let hasItem = false;
 
             for (const inventoryListElement of inventoryList.children) {
@@ -113,5 +115,63 @@ function init() {
                 return fetch(eventURL);
             }
         }).catch();
+    }
+
+    function checkForOptionEvent(id) {
+        let dialogueID = parseInt(id);
+        showButton(button);
+        removeOptionButtons();
+        switch (dialogueID) {
+            case 13 : {
+                console.log("Even is 13!!");
+                createEventButton("narrator", 13, "Nothing", "");
+                createEventButton("narrator", 15, "Knife", "/api/inventory/addItem/Knife");
+                createEventButton("narrator", 16, "Lamp", "/api/inventory/addItem/Lamp");
+                hideButton(button);
+            }
+        }
+    }
+
+    function createEventButton(name, id, optionContent, url) {
+        console.log("Creating button!");
+        const button = document.createElement("button");
+        button.id = id;
+        button.innerText = optionContent;
+
+        button.addEventListener("click", async () => {
+            const urlEvent = await fetch(url).then(async () => {
+                await skipToScene(name, id)
+            }).catch();
+        });
+
+        console.log(button);
+        dialogueOptions.appendChild(button);
+    }
+
+    async function skipToScene(name, id) {
+        const endPoint = "/api/dialogue/skipToDialogue/" + name + "/" + id;
+        const event = await fetch(endPoint).then(response => response.text()).then(() => updateScene()).catch();
+    }
+
+    async function checkForItem(itemName){
+        const endPoint = "/api/inventory/hasItem/" + itemName;
+        return await fetch(endPoint).catch();
+    }
+
+    function hideButton(button){
+        button.style.display = "none";
+    }
+
+    function showButton(button){
+        button.style.display = "block";
+    }
+
+    function removeOptionButtons(){
+        let firstChild = dialogueOptions.firstElementChild;
+
+        while (firstChild) {
+            firstChild.remove();
+            firstChild = dialogueOptions.firstElementChild;
+        }
     }
 }

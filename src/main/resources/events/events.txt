@@ -1,1 +1,3 @@
 narrator,3,/api/inventory/addItem/Phone
+narrator,14,/api/dialogue/skipToDialogue/narrator/17
+narrator,15,/api/dialogue/skipToDialogue/narrator/17

@@ -89,6 +89,19 @@ public class PersonDialogueAccessServiceImpl
     }
 
     @Override
+    public void skipToDialogue(String personName, int dialogueID) {
+        DialogueList dialogueList = personDialogueAccess.getPersonDialogueList(
+                personName);
+
+        for (Dialogue dialogue : dialogueList.getDialogues()) {
+            if (dialogue.getId() == dialogueID) {
+                break;
+            }
+            dialogue.setRead(true);
+        }
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

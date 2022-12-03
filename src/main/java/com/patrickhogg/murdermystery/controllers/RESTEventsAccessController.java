@@ -21,8 +21,6 @@ public class RESTEventsAccessController {
         Player player = (Player) session.getAttribute("player");
         EventsAccessServiceImpl accessService = player.getEventsAccessService();
 
-        Event event = accessService.getEventByActorAndID(speaker, id);
-        System.out.println(event);
-        return event;
+        return accessService.getEventByActorAndID(speaker, id);
     }
 }

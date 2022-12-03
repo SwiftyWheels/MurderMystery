@@ -27,4 +27,6 @@ public interface PersonDialogueAccessService {
     void setPersonDialogueAsRead(Person person, Dialogue dialogue);
 
     void setPersonDialogueAsRead(String personName, Dialogue dialogue);
+
+    void skipToDialogue(String personName, int dialogueID);
 }

@@ -17,9 +17,11 @@ public class RESTDialogueAccessController {
     @GetMapping("/getPersonDialogue/{personName}/{id}")
     @ResponseBody
     public Dialogue getPersonDialogByID(@PathVariable String personName,
-                                        @PathVariable int id, HttpSession session) {
+                                        @PathVariable int id,
+                                        HttpSession session) {
         Player player = (Player) session.getAttribute("player");
-        PersonDialogueAccessServiceImpl dialogueAccess = player.getPersonDialogueAccessService();
+        PersonDialogueAccessServiceImpl dialogueAccess
+                = player.getPersonDialogueAccessService();
         Dialogue dialogue = dialogueAccess.getPersonDialogueByDialogueID(
                 personName, id);
         if (dialogue != null) {
@@ -31,9 +33,11 @@ public class RESTDialogueAccessController {
 
     @GetMapping("/getPersonDialogue/{personName}")
     @ResponseBody
-    public Dialogue getPersonDialog(@PathVariable String personName, HttpSession session) {
+    public Dialogue getPersonDialog(@PathVariable String personName,
+                                    HttpSession session) {
         Player player = (Player) session.getAttribute("player");
-        PersonDialogueAccessServiceImpl dialogueAccess = player.getPersonDialogueAccessService();
+        PersonDialogueAccessServiceImpl dialogueAccess
+                = player.getPersonDialogueAccessService();
         Dialogue dialogue = dialogueAccess.getPersonNextUnreadDialogue(
                 personName);
         if (dialogue != null) {
@@ -41,5 +45,14 @@ public class RESTDialogueAccessController {
             return dialogue;
         }
         return null;
+    }
+
+    @GetMapping("/skipToDialogue/{personName}/{id}")
+    public void getPersonDialog(@PathVariable String personName,
+                                @PathVariable String id, HttpSession session) {
+        Player player = (Player) session.getAttribute("player");
+        PersonDialogueAccessServiceImpl dialogueAccess
+                = player.getPersonDialogueAccessService();
+        dialogueAccess.skipToDialogue(personName, Integer.parseInt(id));
     }
 }
