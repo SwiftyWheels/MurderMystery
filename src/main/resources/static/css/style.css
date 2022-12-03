@@ -256,11 +256,12 @@ p  {
     grid-template-areas: ".... text text button ...."
                          ".... option option option ...";
     align-items: center;
+    padding: 1em;
 }
 
 .dialogue-box p{
     grid-area: text;
-    max-width: 50ch;
+    width: 50ch;
 }
 
 .dialogue-box button{
@@ -272,6 +273,7 @@ p  {
     flex-direction: row;
     justify-content: space-evenly;
     grid-area: option;
+    padding: 1em;
 }
 
 /* Notes Container Styles */

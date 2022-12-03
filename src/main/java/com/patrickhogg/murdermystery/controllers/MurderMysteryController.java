@@ -38,6 +38,11 @@ public class MurderMysteryController {
     @PostMapping("/startGame")
     public String getStartGame(@ModelAttribute Player player, Model model,
                                HttpSession session) {
+
+        if ((Player) session.getAttribute("player") == null) {
+            return "redirect:/";
+        }
+
         session.setAttribute("player", player);
         player = (Player) session.getAttribute("player");
         player.getNotesAccessService().setNote("Enter notes here...");

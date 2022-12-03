@@ -139,9 +139,13 @@ function init() {
         button.innerText = optionContent;
 
         button.addEventListener("click", async () => {
-            const urlEvent = await fetch(url).then(async () => {
-                await skipToScene(name, id)
-            }).catch();
+            if (url){
+                const urlEvent = await fetch(url).then(async () => {
+                    await skipToScene(name, id);
+                }).catch();
+            }else{
+                await skipToScene(name, id);
+            }
         });
 
         console.log(button);
