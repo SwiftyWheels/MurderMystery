@@ -36,18 +36,24 @@
                 </div>
             </div>
         </div>
-        <div class="notes-area">
-            <p>Investigation Notes</p>
-            <div class="notes-container">
-                <label for="notes"></label>
-                <textarea th:text="${notes.notes}" id="notes" rows="10" cols="25" name="notes"></textarea>
+        <div class="sidebar-area">
+            <div class="notes-area">
+                <div class="title">
+                    <p>Investigation Notes</p>
+                </div>
+                <div class="notes-container">
+                    <label for="notes"></label>
+                    <textarea th:text="${notes.notes}" id="notes" rows="10" cols="25" name="notes"></textarea>
+                </div>
             </div>
-        </div>
-        <div class="inventory-area">
-            <p>Inventory</p>
-            <div class="inventory-container">
-                <ul class="inventory-list">
-                </ul>
+            <div class="inventory-area">
+                <div class="title">
+                    <p>Inventory</p>
+                </div>
+                <div class="inventory-container">
+                    <ul class="inventory-list">
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
