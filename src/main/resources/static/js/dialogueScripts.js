@@ -163,6 +163,12 @@ function init() {
             }
             case 79 : {
                 hideButton(button);
+                createRestartButton();
+                break;
+            }
+            case 80 : {
+                hideButton(button);
+                createRestartButton();
                 break;
             }
         }
@@ -346,5 +352,15 @@ function init() {
 
     function parseBoolean(value) {
         return value === "true";
+    }
+
+    function createRestartButton(){
+        if (dialogueOptions) {
+            console.log("Creating restart button");
+            let button = document.createElement("a");
+            button.href = "/";
+            button.text = "Restart";
+            dialogueOptions.appendChild(button);
+        }
     }
 }
