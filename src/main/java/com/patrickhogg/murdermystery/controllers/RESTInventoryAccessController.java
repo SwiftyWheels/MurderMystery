@@ -20,7 +20,6 @@ public class RESTInventoryAccessController {
         InventoryAccessServiceImpl inventoryAccessService
                 = player.getInventoryAccessService();
         return inventoryAccessService.getInventory();
-
     }
 
     @GetMapping("/addItem/{itemName}")
@@ -36,6 +35,7 @@ public class RESTInventoryAccessController {
         Player player = (Player) session.getAttribute("player");
         InventoryAccessServiceImpl inventoryAccessService
                 = player.getInventoryAccessService();
+        System.out.println("Removing item: " + itemName);
         inventoryAccessService.removeItem(itemName);
     }
 

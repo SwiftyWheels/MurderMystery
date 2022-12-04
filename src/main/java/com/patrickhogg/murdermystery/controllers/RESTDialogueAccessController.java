@@ -54,5 +54,6 @@ public class RESTDialogueAccessController {
         PersonDialogueAccessServiceImpl dialogueAccess
                 = player.getPersonDialogueAccessService();
         dialogueAccess.skipToDialogue(personName, Integer.parseInt(id));
+        System.out.println("Skipping to dialogue: " + id);
     }
 }

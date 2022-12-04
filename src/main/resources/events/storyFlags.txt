@@ -1,0 +1,3 @@
+sisterAttackKnife,false
+sisterAttackLamp,false
+sisterAttackNone,false

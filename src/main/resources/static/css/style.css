@@ -266,6 +266,8 @@ p  {
 
 .dialogue-box button{
     grid-area: button;
+    height: 100%;
+    width: 100%;
 }
 
 .dialogue-box .dialogue-options {
@@ -274,6 +276,7 @@ p  {
     justify-content: space-evenly;
     grid-area: option;
     padding: 1em;
+    gap: 1em;
 }
 
 /* Notes Container Styles */

@@ -47,10 +47,22 @@ public class MurderMysteryController {
         player = (Player) session.getAttribute("player");
         player.getNotesAccessService().setNote("Enter notes here...");
 
+        initGameValues(session);
+
         Note note = player.getNotesAccessService().getNote();
+        if(note.getNotes() != null && !note.getNotes().isEmpty()){
+            model.addAttribute("notes", note);
+        }
 
+
+        Player gamePlayer = (Player) session.getAttribute("player");
+        model.addAttribute("player", gamePlayer);
+        return "intro-game";
+    }
+
+    public void initGameValues(HttpSession session) {
+        Player player = (Player) session.getAttribute("player");
         boolean hasStarted = (boolean) session.getAttribute("hasStarted");
-
 
         if ((player.getPersonAccessService().getAllPeople().isEmpty()) || !hasStarted) {
             initPeople(session);
@@ -65,14 +77,12 @@ public class MurderMysteryController {
             session.setAttribute("hasStarted",true);
         }
 
-        if(note.getNotes() != null && !note.getNotes().isEmpty()){
-            System.out.println("Note: " + note);
-            model.addAttribute("notes", note);
+        if (player.getStoryFlagAccessService().getStoryFlagList().getStoryFlags() == null
+            || !hasStarted) {
+            initStoryFlags(session);
+            System.out.println("Initializing story flags");
+            session.setAttribute("hasStarted",true);
         }
-
-        Player gamePlayer = (Player) session.getAttribute("player");
-        model.addAttribute("player", gamePlayer);
-        return "intro-game";
     }
 
 
@@ -132,6 +142,22 @@ public class MurderMysteryController {
             player.getEventsAccessService().getEventsAccess().setEventList(
                     eventList);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initStoryFlags(HttpSession session) {
+        Player player = (Player) session.getAttribute("player");
+        try {
+            InputStream eventsFile = new ClassPathResource(
+                    "/events/storyFlags.txt").getInputStream();
+
+            StoryFlagList storyFlagList = resourceFileReader.getStoryFlagListFromFile(
+                    eventsFile);
+
+            player.getStoryFlagAccessService().getFlagAccess().setStoryFlagList(
+                    storyFlagList);
         } catch (Exception e) {
             e.printStackTrace();
         }

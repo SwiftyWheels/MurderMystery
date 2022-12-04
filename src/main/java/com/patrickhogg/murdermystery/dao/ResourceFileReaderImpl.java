@@ -101,6 +101,34 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
     }
 
     @Override
+    public StoryFlagList getStoryFlagListFromFile(InputStream file) {
+        StoryFlagList storyFlagList = new StoryFlagList();
+        try {
+            if (file.available() > 0) {
+                try (BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(file))) {
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        String[] flagText = line.split(",");
+                        String flagName = flagText[0];
+                        boolean flagValue = Boolean.parseBoolean(flagText[1]);
+                        StoryFlag storyFlag = new StoryFlag(flagName,
+                                                            flagValue);
+                        storyFlagList.getStoryFlags().add(storyFlag);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("Can't load file! File doesn't exist!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return storyFlagList;
+    }
+
+    @Override
     public String replaceTemplateString(String pattern, String text,
                                         String replacement) {
         Pattern p = Pattern.compile(pattern);

@@ -1,3 +1,17 @@
-narrator,3,/api/inventory/addItem/Phone
-narrator,14,/api/dialogue/skipToDialogue/narrator/17
-narrator,15,/api/dialogue/skipToDialogue/narrator/17
+narrator,3,/api/inventory/addItem/Phone, Pickup phone event
+narrator,14,/api/dialogue/skipToDialogue/narrator/17, didn't grab weapon
+narrator,15,/api/dialogue/skipToDialogue/narrator/17, chose the knife
+narrator,20,/api/dialogue/skipToDialogue/narrator/25, open door attack with knife
+narrator,21,/api/dialogue/skipToDialogue/narrator/25, open door attack with lamp
+narrator,22,/api/dialogue/skipToDialogue/narrator/24, open door attack no weapon
+narrator,23,/api/storyFlag/setStoryFlagValue/sisterAttackNone/true, take chance on sister
+narrator,30,/api/dialogue/skipToDialogue/narrator/32, tell mom stabbed sister
+narrator,40,/api/dialogue/skipToDialogue/narrator/81, die by not turning on lights
+narrator,52,/api/dialogue/skipToDialogue/narrator/81, die by mom/sister
+narrator,55,/api/dialogue/skipToDialogue/narrator/81, die by mom
+narrator,62,/api/dialogue/skipToDialogue/narrator/81, die by mom
+narrator,65,/api/dialogue/skipToDialogue/narrator/81, die by mom
+narrator,70,/api/dialogue/skipToDialogue/narrator/81, die by mom
+narrator,72,/api/dialogue/skipToDialogue/narrator/81, die by mom
+narrator,75,/api/dialogue/skipToDialogue/narrator/81, die by mom
+narrator,75,/api/dialogue/skipToDialogue/narrator/81, die by mom

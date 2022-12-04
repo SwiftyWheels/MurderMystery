@@ -3,6 +3,7 @@ package com.patrickhogg.murdermystery.dao;
 import com.patrickhogg.murdermystery.model.DialogueList;
 import com.patrickhogg.murdermystery.model.EventList;
 import com.patrickhogg.murdermystery.model.Player;
+import com.patrickhogg.murdermystery.model.StoryFlagList;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -21,6 +22,8 @@ public interface ResourceFileReader {
     DialogueList getDialogueListFromFile(InputStream file, HttpSession session);
 
     EventList getEventListFromFile(InputStream file);
+
+    StoryFlagList getStoryFlagListFromFile(InputStream file);
 
     String replaceTemplateString(String pattern, String text,
                                  String replacement);

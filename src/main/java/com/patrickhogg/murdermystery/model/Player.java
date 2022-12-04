@@ -29,6 +29,9 @@ public class Player implements Serializable, Character {
     private EventsAccessServiceImpl eventsAccessService
             = new EventsAccessServiceImpl();
 
+    private StoryFlagAccessServiceImpl storyFlagAccessService
+            = new StoryFlagAccessServiceImpl();
+
     public Player() {
         // no args constructor
     }
@@ -102,6 +105,15 @@ public class Player implements Serializable, Character {
         this.eventsAccessService = eventsAccessService;
     }
 
+    public StoryFlagAccessServiceImpl getStoryFlagAccessService() {
+        return storyFlagAccessService;
+    }
+
+    public void setStoryFlagAccessService(
+            StoryFlagAccessServiceImpl storyFlagAccessService) {
+        this.storyFlagAccessService = storyFlagAccessService;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,7 +134,9 @@ public class Player implements Serializable, Character {
                && Objects.equals(getInventoryAccessService(),
                                  player.getInventoryAccessService())
                && Objects.equals(getEventsAccessService(),
-                                 player.getEventsAccessService());
+                                 player.getEventsAccessService())
+               && Objects.equals(getStoryFlagAccessService(),
+                                 player.getStoryFlagAccessService());
     }
 
     @Override
@@ -131,7 +145,8 @@ public class Player implements Serializable, Character {
                             getPersonAccessService(), getNotesAccessService(),
                             getPersonDialogueAccessService(),
                             getInventoryAccessService(),
-                            getEventsAccessService());
+                            getEventsAccessService(),
+                            getStoryFlagAccessService());
     }
 
     @Override
@@ -142,6 +157,7 @@ public class Player implements Serializable, Character {
                + notesAccessService + ", personDialogueAccessService="
                + personDialogueAccessService + ", inventoryAccessService="
                + inventoryAccessService + ", eventsAccessService="
-               + eventsAccessService + '}';
+               + eventsAccessService + ", storyFlagAccessService="
+               + storyFlagAccessService + '}';
     }
 }
