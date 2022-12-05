@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.io.InputStream;
@@ -21,32 +20,36 @@ import java.util.List;
 @Controller
 public class MurderMysteryController {
 
-    private final ResourceFileReaderImpl resourceFileReader = new ResourceFileReaderImpl();
+    private final ResourceFileReaderImpl resourceFileReader
+            = new ResourceFileReaderImpl();
 
     @GetMapping("/")
     public String getIndex(HttpSession session, Model model) {
         Player player = new Player();
         System.out.println(player);
 
-        if(!session.isNew()){
+        if (!session.isNew()) {
             // Invalidate the session
             session.removeAttribute("player");
             session.removeAttribute("hasStarted");
+            player = new Player();
+            System.out.println(player);
         }
 
 
-        session.setAttribute("player",player);
-        session.setAttribute("hasStarted",false);
+        session.setAttribute("player", player);
+        session.setAttribute("hasStarted", false);
 
         model.addAttribute("player", player);
         return "index";
     }
 
-    @PostMapping("/startGame")
+    @GetMapping("/startGame")
     public String getStartGame(@ModelAttribute Player player, Model model,
                                HttpSession session) {
+        Player currentPlayer = (Player) session.getAttribute("player");
 
-        if ((Player) session.getAttribute("player") == null) {
+        if (currentPlayer == null) {
             return "redirect:/";
         }
 
@@ -57,7 +60,7 @@ public class MurderMysteryController {
         initGameValues(session);
 
         Note note = player.getNotesAccessService().getNote();
-        if(note.getNotes() != null && !note.getNotes().isEmpty()){
+        if (note.getNotes() != null && !note.getNotes().isEmpty()) {
             model.addAttribute("notes", note);
         }
 
@@ -71,24 +74,26 @@ public class MurderMysteryController {
         Player player = (Player) session.getAttribute("player");
         boolean hasStarted = (boolean) session.getAttribute("hasStarted");
 
-        if ((player.getPersonAccessService().getAllPeople().isEmpty()) || !hasStarted) {
+        if ((player.getPersonAccessService().getAllPeople().isEmpty())
+            || !hasStarted) {
             initPeople(session);
             System.out.println("Initializing people");
-            session.setAttribute("hasStarted",true);
+            session.setAttribute("hasStarted", true);
         }
 
         if (player.getEventsAccessService().getEventList().getEvents() == null
             || !hasStarted) {
             initEvents(session);
             System.out.println("Initializing events");
-            session.setAttribute("hasStarted",true);
+            session.setAttribute("hasStarted", true);
         }
 
-        if (player.getStoryFlagAccessService().getStoryFlagList().getStoryFlags() == null
-            || !hasStarted) {
+        if (player.getStoryFlagAccessService()
+                  .getStoryFlagList()
+                  .getStoryFlags() == null || !hasStarted) {
             initStoryFlags(session);
             System.out.println("Initializing story flags");
-            session.setAttribute("hasStarted",true);
+            session.setAttribute("hasStarted", true);
         }
     }
 
@@ -125,7 +130,8 @@ public class MurderMysteryController {
                     = resourceFileReader.getDialogueListFromFile(narratorFile,
                                                                  session);
 
-            Person narrator = player.getPersonAccessService().getPersonByName("Narrator");
+            Person narrator = player.getPersonAccessService().getPersonByName(
+                    "Narrator");
             narrator.setDialogueList(narratorDialogue);
 
             // JOE
@@ -160,8 +166,8 @@ public class MurderMysteryController {
             InputStream eventsFile = new ClassPathResource(
                     "/events/storyFlags.txt").getInputStream();
 
-            StoryFlagList storyFlagList = resourceFileReader.getStoryFlagListFromFile(
-                    eventsFile);
+            StoryFlagList storyFlagList
+                    = resourceFileReader.getStoryFlagListFromFile(eventsFile);
 
             player.getStoryFlagAccessService().getFlagAccess().setStoryFlagList(
                     storyFlagList);

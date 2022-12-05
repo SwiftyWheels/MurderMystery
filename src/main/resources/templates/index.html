@@ -19,11 +19,13 @@
             <div>
                 <ul>
                     <li>
-                        <p>Read the text prompts carefully, as they will contain clues. The pictures do not
+                        <p>Read the text prompts carefully, as they will contain clues. The pictures
+                           do not
                            contain clues.</p>
                     </li>
                     <li>
-                        <p>Take notes as it will help you solve the murder. You can't go back in the story
+                        <p>Take notes as it will help you solve the murder. You can't go back in the
+                           story
                            without restarting.</p>
                     </li>
                     <li>
@@ -42,13 +44,15 @@
                         <p>Game contains scenes that are violent. Viewer discretion is advised.</p>
                     </li>
                     <li>
-                        <p>All graphics were generated using AI. Any likeness is purely coincidental.</p>
+                        <p>All graphics were generated using AI. Any likeness is purely
+                           coincidental.</p>
                     </li>
                     <li>
                         <p>If you reload the page at any time, you may lose progress.</p>
                     </li>
                     <li>
-                        <p>You can restart the game by clicking the "Murder Mystery" at the top of the
+                        <p>You can restart the game by clicking the "Murder Mystery" at the top of
+                           the
                            page.</p>
                     </li>
                 </ul>
@@ -77,7 +81,7 @@
         </section>
         <div class="form">
             <h1>Player Info</h1>
-            <form th:action="@{/startGame}" method="post" th:object="${player}">
+            <form th:action="@{/startGame}" method="get" th:object="${player}">
                 <div>
                     <label for="name">Player Name:</label>
                     <input type="text" id="name" name="name" th:field="*{name}" required>
