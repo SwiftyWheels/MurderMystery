@@ -32,8 +32,6 @@ public class MurderMysteryController {
             // Invalidate the session
             session.removeAttribute("player");
             session.removeAttribute("hasStarted");
-            player = new Player();
-            System.out.println(player);
         }
 
 
@@ -47,9 +45,8 @@ public class MurderMysteryController {
     @GetMapping("/startGame")
     public String getStartGame(@ModelAttribute Player player, Model model,
                                HttpSession session) {
-        Player currentPlayer = (Player) session.getAttribute("player");
 
-        if (currentPlayer == null) {
+        if (player == null || player.getName() == null) {
             return "redirect:/";
         }
 
@@ -81,7 +78,7 @@ public class MurderMysteryController {
             session.setAttribute("hasStarted", true);
         }
 
-        if (player.getEventsAccessService().getEventList().getEvents() == null
+        if (player.getEventsAccessService().getEventList().getEvents().isEmpty()
             || !hasStarted) {
             initEvents(session);
             System.out.println("Initializing events");
@@ -90,7 +87,7 @@ public class MurderMysteryController {
 
         if (player.getStoryFlagAccessService()
                   .getStoryFlagList()
-                  .getStoryFlags() == null || !hasStarted) {
+                  .getStoryFlags().isEmpty() || !hasStarted) {
             initStoryFlags(session);
             System.out.println("Initializing story flags");
             session.setAttribute("hasStarted", true);

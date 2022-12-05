@@ -357,9 +357,9 @@ function init() {
     function createRestartButton(){
         if (dialogueOptions) {
             console.log("Creating restart button");
-            let button = document.createElement("a");
-            button.href = "/";
-            button.text = "Restart";
+            let button = document.createElement("button");
+            button.innerText = "Restart";
+            button.addEventListener("click", () => location.reload());
             dialogueOptions.appendChild(button);
         }
     }
