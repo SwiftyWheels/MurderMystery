@@ -27,20 +27,25 @@ body {
     grid-template-rows: max-content 1fr max-content;
     grid-template-areas:
             "header header header"
-            ".... main ...."
+            "......  main  ......."
             "footer footer footer";
     gap: 1em;
     background: rgba(7, 7, 7, 0.8);
 }
 
+@media(min-width: 769px){
+    main{
+        min-width: 50vw;
+        max-width: 50vw;
+    }
+}
+
 main {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    align-content: center;
     grid-area: main;
-    box-shadow: 5px 5px 10px rgb(244, 244, 244),
-    -5px 0 10px rgb(244, 244, 244);
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    justify-self: center;
     border-radius: 5px;
     padding: 1em 2em;
     background: white;
@@ -48,13 +53,9 @@ main {
 
 main .game{
     display: grid;
-    width: 100%;
-    height: 100%;
-    align-items: center;
     grid-template-areas:
             "game game game side"
             "game game game side";
-    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 main .game-area {
@@ -62,14 +63,12 @@ main .game-area {
     display: grid;
     align-items: center;
     grid-template-areas:
-            "...."
             "info"
             "img"
             "img"
             "text"
-            "text"
-            "....";
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+            "text";
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 footer{
@@ -147,6 +146,7 @@ a:hover{
     border: 1px solid rgba(7, 7, 7, 0.4);
     width: 100%;
     text-align: center;
+    font-weight: bold;
 }
 
 /* Form Styles */
@@ -189,6 +189,56 @@ a:hover{
     height: 100%;
 }
 
+/* Notes Container Styles */
+.notes-area{
+    grid-area: notes;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    height: 50%;
+    border: 1px solid rgba(7, 7, 7, 0.4);
+    overflow: scroll;
+}
+
+.notes-area textarea{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+}
+
+/* Inventory Container Styles */
+.inventory-area{
+    grid-area: inventory;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    height: 50%;
+    overflow: scroll;
+    border: 1px solid rgba(7, 7, 7, 0.4);
+}
+
+.inventory-container{
+    height: 50%;
+    width: 100%;
+}
+
+.inventory-area ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 0;
+    list-style: none;
+}
+
+.inventory-area li{
+    border: 1px solid rgba(7, 7, 7, 0.4);
+    width: 100%;
+    text-align: center;
+}
+
 /* Player Info Styles */
 .player-info-container{
     grid-area: info;
@@ -220,90 +270,76 @@ a:hover{
 }
 
 .image-box img {
+    min-width: 0;
     max-width: 300px;
+    min-height: 0;
     max-height: 300px;
-    object-fit: contain;
 }
 
 /* Dialogue Box Styles */
+
+@media (max-width: 768px) {
+    .dialogue-box{
+        grid-template-areas: unset;
+    }
+
+    .dialogue-box p{
+        grid-area: unset;
+    }
+
+    .dialogue-box button{
+        grid-area: unset;
+    }
+
+    .dialogue-box .dialogue-options{
+        grid-area: unset;
+    }
+}
+
+@media (min-width: 769px) {
+    .dialogue-box{
+        grid-template-areas: "dialogue dialogue dialogue button"
+                         "option option option option";
+    }
+
+    .dialogue-box p{
+        grid-area: dialogue;
+    }
+
+    .dialogue-box button{
+        grid-area: button;
+    }
+
+    .dialogue-box .dialogue-options{
+        grid-area: option;
+    }
+}
+
 .dialogue-box{
     display: grid;
-    position: relative;
     grid-area: text;
     border: 1px solid rgba(7, 7, 7, 0.4);
-    grid-template-areas: "text text button"
-                         "option option option";
+    grid-template-columns: repeat(auto-fill, minmax(100px, 50ch));
     align-items: center;
     justify-content: center;
     padding: 1em;
 }
 
 .dialogue-box p{
-    grid-area: text;
-    width: 50ch;
     padding: 1em;
     margin: 0;
 }
 
 .dialogue-box button{
-    grid-area: button;
     padding: 1em;
 }
 
 .dialogue-box .dialogue-options {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    grid-area: option;
+    justify-content: center;
     padding: 1em;
     gap: 1em;
-}
-
-/* Notes Container Styles */
-.notes-area{
-    grid-area: notes;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    border: 1px solid rgba(7, 7, 7, 0.4);
-}
-
-.notes-area textarea{
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    white-space: pre-wrap;
-}
-
-/* Inventory Container Styles */
-.inventory-area{
-    grid-area: inventory;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    height: 100%;
-    overflow: scroll;
-    border: 1px solid rgba(7, 7, 7, 0.4);
-}
-
-.inventory-container{
-    width: 100%;
-}
-
-.inventory-area ul {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    padding: 0;
-    list-style: none;
-}
-
-.inventory-area li{
-    border: 1px solid rgba(7, 7, 7, 0.4);
-    width: 100%;
-    text-align: center;
 }
 
 /* Utility Styles */
