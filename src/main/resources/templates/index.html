@@ -11,91 +11,93 @@
 <body>
 <header th:replace="fragments/fragments :: header"></header>
 <main>
-    <section>
-        <div class="heading">
-            <p>Instructions</p>
-        </div>
-        <div>
-            <ul>
-                <li>
-                    <p>Read the text prompts carefully, as they will contain clues. The pictures do not
-                       contain clues.</p>
-                </li>
-                <li>
-                    <p>Take notes as it will help you solve the murder. You can't go back in the story
-                       without restarting.</p>
-                </li>
-                <li>
-                    <p>You will have to make decisions during gameplay, choose wisely.</p>
-                </li>
-            </ul>
-        </div>
-    </section>
-    <section>
-        <div class="subheading">
-            <p>Warnings + Notes</p>
-        </div>
-        <div>
-            <ul>
-                <li>
-                    <p>Game contains scenes that are violent. Viewer discretion is advised.</p>
-                </li>
-                <li>
-                    <p>All graphics were generated using AI. Any likeness is purely coincidental.</p>
-                </li>
-                <li>
-                    <p>If you reload the page at any time, you may lose progress.</p>
-                </li>
-                <li>
-                    <p>You can restart the game by clicking the "Murder Mystery" at the top of the
-                       page.</p>
-                </li>
-            </ul>
-        </div>
-    </section>
-    <section>
-        <div class="subheading">
-            <p>Characters</p>
-        </div>
-        <div>
-            <ul>
-                <li>
-                    <p>Father - Joe</p>
-                </li>
-                <li>
-                    <p>Step Mom - Diane</p>
-                </li>
-                <li>
-                    <p>Step Sister - Eve</p>
-                </li>
-                <li>
-                    <p>Aunt - Diane</p>
-                </li>
-            </ul>
-        </div>
-    </section>
-    <div class="form">
-        <h1>Player Info</h1>
-        <form th:action="@{/startGame}" method="post" th:object="${player}">
-            <div>
-                <label for="name">Player Name:</label>
-                <input type="text" id="name" name="name" th:field="*{name}" required>
+    <div class="game-intro">
+        <section>
+            <div class="heading">
+                <p>Instructions</p>
             </div>
             <div>
-                <label for="age">Age:</label>
-                <input type="number" id="age" name="age" th:field="*{age}" min="0"
-                       step="1" required>
+                <ul>
+                    <li>
+                        <p>Read the text prompts carefully, as they will contain clues. The pictures do not
+                           contain clues.</p>
+                    </li>
+                    <li>
+                        <p>Take notes as it will help you solve the murder. You can't go back in the story
+                           without restarting.</p>
+                    </li>
+                    <li>
+                        <p>You will have to make decisions during gameplay, choose wisely.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <div class="subheading">
+                <p>Warnings + Notes</p>
             </div>
             <div>
-                <label for="profession">Profession:</label>
-                <input type="text"
-                       id="profession"
-                       name="profession"
-                       th:field="*{profession}"
-                       required>
+                <ul>
+                    <li>
+                        <p>Game contains scenes that are violent. Viewer discretion is advised.</p>
+                    </li>
+                    <li>
+                        <p>All graphics were generated using AI. Any likeness is purely coincidental.</p>
+                    </li>
+                    <li>
+                        <p>If you reload the page at any time, you may lose progress.</p>
+                    </li>
+                    <li>
+                        <p>You can restart the game by clicking the "Murder Mystery" at the top of the
+                           page.</p>
+                    </li>
+                </ul>
             </div>
-            <input type="submit" value="Start Game">
-        </form>
+        </section>
+        <section>
+            <div class="subheading">
+                <p>Characters</p>
+            </div>
+            <div>
+                <ul>
+                    <li>
+                        <p>Father - Joe</p>
+                    </li>
+                    <li>
+                        <p>Step Mom - Diane</p>
+                    </li>
+                    <li>
+                        <p>Step Sister - Eve</p>
+                    </li>
+                    <li>
+                        <p>Aunt - Diane</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <div class="form">
+            <h1>Player Info</h1>
+            <form th:action="@{/startGame}" method="post" th:object="${player}">
+                <div>
+                    <label for="name">Player Name:</label>
+                    <input type="text" id="name" name="name" th:field="*{name}" required>
+                </div>
+                <div>
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" th:field="*{age}" min="0"
+                           step="1" required>
+                </div>
+                <div>
+                    <label for="profession">Profession:</label>
+                    <input type="text"
+                           id="profession"
+                           name="profession"
+                           th:field="*{profession}"
+                           required>
+                </div>
+                <input type="submit" value="Start Game">
+            </form>
+        </div>
     </div>
 </main>
 <footer th:replace="fragments/fragments :: footer"></footer>

@@ -33,29 +33,66 @@ body {
     background: rgba(7, 7, 7, 0.8);
 }
 
+@media(max-width: 768px){
+    main{
+
+    }
+
+    main .game-container{
+        grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    main .game{
+        grid-template-areas:
+            "game"
+            "side";
+    }
+
+    main .game-container{
+        grid-template-rows: repeat(1, minmax(100px, 1fr));
+        grid-template-columns: repeat(1, minmax(100px, 1fr));
+    }
+}
+
 @media(min-width: 769px){
     main{
-        min-width: 50vw;
-        max-width: 50vw;
+        min-width: 75vw;
+    }
+
+    main .game-container{
+        display: grid;
+    }
+
+    main .game{
+        grid-template-areas:
+            "game game game side"
+            "game game game side";
+    }
+
+    main .game-container{
+        grid-template-rows: repeat(1, minmax(100px, 75vh));
+        grid-template-columns: repeat(1, minmax(100px, 75vw));
     }
 }
 
 main {
     grid-area: main;
     display: grid;
-    align-content: center;
-    justify-content: center;
+    align-items: center;
     justify-self: center;
     border-radius: 5px;
     padding: 1em 2em;
     background: white;
 }
 
+main .game-container{
+    display: grid;
+}
+
 main .game{
     display: grid;
-    grid-template-areas:
-            "game game game side"
-            "game game game side";
+    align-content: center;
 }
 
 main .game-area {
@@ -197,8 +234,14 @@ a:hover{
     justify-content: start;
     align-items: center;
     height: 50%;
+    width: 100%;
     border: 1px solid rgba(7, 7, 7, 0.4);
     overflow: scroll;
+}
+
+.notes-container{
+    width: 100%;
+    height: 100%;
 }
 
 .notes-area textarea{
@@ -254,8 +297,7 @@ a:hover{
     display: flex;
     flex-direction: row;
     gap: 1em;
-    padding: 0;
-    justify-content: space-evenly;
+    justify-content: space-around;
     list-style: none;
 }
 
@@ -322,7 +364,14 @@ a:hover{
     grid-template-columns: repeat(auto-fill, minmax(100px, 50ch));
     align-items: center;
     justify-content: center;
+    justify-items: center;
     padding: 1em;
+}
+
+@media (min-width: 1020px) {
+    .dialogue-box p{
+        width: 50ch;
+    }
 }
 
 .dialogue-box p{
