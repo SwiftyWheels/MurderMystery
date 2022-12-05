@@ -28,6 +28,13 @@ public class MurderMysteryController {
         Player player = new Player();
         System.out.println(player);
 
+        if(!session.isNew()){
+            // Invalidate the session
+            session.removeAttribute("player");
+            session.removeAttribute("hasStarted");
+        }
+
+
         session.setAttribute("player",player);
         session.setAttribute("hasStarted",false);
 
