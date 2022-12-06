@@ -41,29 +41,19 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
     }
 
     @Override
-    public DialogueList getDialogueListFromFile(InputStream file,
-                                                HttpSession session) {
+    public DialogueList getDialogueListFromFile(InputStream file, HttpSession session) {
         DialogueList dialogueList = new DialogueList();
         Player player = (Player) session.getAttribute("player");
-        try {
-            if (file.available() > 0) {
-                try (BufferedReader bufferedReader = new BufferedReader(
-                        new InputStreamReader(file))) {
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        String[] dialogueText = line.split("\\R");
-                        for (String text : dialogueText) {
-                            Dialogue dialogue = new Dialogue(
-                                    dialogueList.getDialogues().size(),
-                                    filterInputString(player, text), false);
-                            dialogueList.addDialogue(dialogue);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] dialogueText = line.split("\\R");
+                for (String text : dialogueText) {
+                    Dialogue dialogue = new Dialogue(
+                            dialogueList.getDialogues().size(),
+                            filterInputString(player, text), false);
+                    dialogueList.addDialogue(dialogue);
                 }
-            } else {
-                System.err.println("Can't load file! File doesn't exist!");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,27 +64,18 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
     @Override
     public EventList getEventListFromFile(InputStream file) {
         EventList eventList = new EventList();
-        try {
-            if (file.available() > 0) {
-                try (BufferedReader bufferedReader = new BufferedReader(
-                        new InputStreamReader(file))) {
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        String[] eventText = line.split(",");
-                        String actor = eventText[0];
-                        String id = eventText[1];
-                        String url = eventText[2];
-                        Event event = new Event(actor, id, url);
-                        eventList.getEvents().add(event);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.err.println("Can't load file! File doesn't exist!");
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] eventText = line.split(",");
+                String actor = eventText[0];
+                String id = eventText[1];
+                String url = eventText[2];
+                Event event = new Event(actor, id, url);
+                eventList.getEvents().add(event);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
         }
 
         return eventList;
@@ -103,25 +84,18 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
     @Override
     public StoryFlagList getStoryFlagListFromFile(InputStream file) {
         StoryFlagList storyFlagList = new StoryFlagList();
-        try {
-            if (file.available() > 0) {
-                try (BufferedReader bufferedReader = new BufferedReader(
-                        new InputStreamReader(file))) {
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        String[] flagText = line.split(",");
-                        String flagName = flagText[0];
-                        boolean flagValue = Boolean.parseBoolean(flagText[1]);
-                        StoryFlag storyFlag = new StoryFlag(flagName,
-                                                            flagValue);
-                        storyFlagList.getStoryFlags().add(storyFlag);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.err.println("Can't load file! File doesn't exist!");
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(file))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] flagText = line.split(",");
+                String flagName = flagText[0];
+                boolean flagValue = Boolean.parseBoolean(flagText[1]);
+                StoryFlag storyFlag = new StoryFlag(flagName, flagValue);
+                storyFlagList.getStoryFlags().add(storyFlag);
             }
+        } catch (IOException e) {
+            System.err.println("Can't load file! File doesn't exist!");
         } catch (Exception e) {
             e.printStackTrace();
         }
