@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,14 +27,12 @@ public class MurderMysteryController {
     @GetMapping("/")
     public String getIndex(HttpSession session, Model model) {
         Player player = new Player();
-        System.out.println(player);
 
         if (!session.isNew()) {
             // Invalidate the session
             session.removeAttribute("player");
             session.removeAttribute("hasStarted");
         }
-
 
         session.setAttribute("player", player);
         session.setAttribute("hasStarted", false);
@@ -57,6 +56,7 @@ public class MurderMysteryController {
         initGameValues(session);
 
         Note note = player.getNotesAccessService().getNote();
+
         if (note.getNotes() != null && !note.getNotes().isEmpty()) {
             model.addAttribute("notes", note);
         }
@@ -64,6 +64,7 @@ public class MurderMysteryController {
 
         Player gamePlayer = (Player) session.getAttribute("player");
         model.addAttribute("player", gamePlayer);
+
         return "intro-game";
     }
 
@@ -87,7 +88,8 @@ public class MurderMysteryController {
 
         if (player.getStoryFlagAccessService()
                   .getStoryFlagList()
-                  .getStoryFlags().isEmpty() || !hasStarted) {
+                  .getStoryFlags()
+                  .isEmpty() || !hasStarted) {
             initStoryFlags(session);
             System.out.println("Initializing story flags");
             session.setAttribute("hasStarted", true);
@@ -98,38 +100,27 @@ public class MurderMysteryController {
     public void initPeople(HttpSession session) {
         Player player = (Player) session.getAttribute("player");
         List<Person> personList = new LinkedList<>();
-        Person narrator = new Person("Narrator", Gender.MALE, false, null);
-        personList.add(narrator);
-        Person joe = new Person("Joe", Gender.MALE, false, null);
-        personList.add(joe);
-        Person debbie = new Person("Debbie", Gender.FEMALE, false, null);
-        personList.add(debbie);
-        Person diane = new Person("Diane", Gender.FEMALE, false, null);
-        personList.add(diane);
-        Person eve = new Person("Eve", Gender.FEMALE, false, null);
-        personList.add(eve);
+
+        personList.add(new Person("Narrator", Gender.MALE, false, null));
+        personList.add(new Person("Joe", Gender.MALE, false, null));
+        personList.add(new Person("Debbie", Gender.FEMALE, false, null));
+        personList.add(new Person("Diane", Gender.FEMALE, false, null));
+        personList.add(new Person("Eve", Gender.FEMALE, false, null));
 
         for (Person person : personList) {
             player.getPersonAccessService().addPerson(person);
         }
+
         initDialogue(session);
     }
 
     public void initDialogue(HttpSession session) {
         Player player = (Player) session.getAttribute("player");
         try {
-
             // NARRATOR
-            InputStream narratorFile = new ClassPathResource(
-                    "/dialogues/characters/narrator/dialogue.txt").getInputStream();
-
-            DialogueList narratorDialogue
-                    = resourceFileReader.getDialogueListFromFile(narratorFile,
-                                                                 session);
-
-            Person narrator = player.getPersonAccessService().getPersonByName(
-                    "Narrator");
-            narrator.setDialogueList(narratorDialogue);
+            setPersonDialogue(player, "Narrator",
+                              "/dialogues/characters/narrator/dialogue.txt",
+                              session);
 
             // JOE
             // DIANE
@@ -140,34 +131,44 @@ public class MurderMysteryController {
         }
     }
 
+    private void setPersonDialogue(Player player, String personName,
+                                   String dialogueFilePath, HttpSession session)
+            throws IOException {
+        InputStream dialogueFile = new ClassPathResource(
+                dialogueFilePath).getInputStream();
+
+        DialogueList dialogueList = resourceFileReader.getDialogueListFromFile(
+                dialogueFile, session);
+
+        Person person = player.getPersonAccessService().getPersonByName(
+                personName);
+        person.setDialogueList(dialogueList);
+    }
+
     public void initEvents(HttpSession session) {
         Player player = (Player) session.getAttribute("player");
-        try {
-            InputStream eventsFile = new ClassPathResource(
-                    "/events/events.txt").getInputStream();
 
-            EventList eventList = resourceFileReader.getEventListFromFile(
-                    eventsFile);
+        try (InputStream eventsFile = new ClassPathResource(
+                "/events/events.txt").getInputStream()) {
 
             player.getEventsAccessService().getEventsAccess().setEventList(
-                    eventList);
+                    resourceFileReader.getEventListFromFile(eventsFile));
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+            // Handle IOException
             e.printStackTrace();
         }
     }
 
     public void initStoryFlags(HttpSession session) {
         Player player = (Player) session.getAttribute("player");
-        try {
-            InputStream eventsFile = new ClassPathResource(
-                    "/events/storyFlags.txt").getInputStream();
 
-            StoryFlagList storyFlagList
-                    = resourceFileReader.getStoryFlagListFromFile(eventsFile);
+        try (InputStream eventsFile = new ClassPathResource(
+                "/events/storyFlags.txt").getInputStream()) {
 
             player.getStoryFlagAccessService().getFlagAccess().setStoryFlagList(
-                    storyFlagList);
+                    resourceFileReader.getStoryFlagListFromFile(eventsFile));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
