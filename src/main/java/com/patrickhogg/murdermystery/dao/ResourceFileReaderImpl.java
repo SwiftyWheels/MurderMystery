@@ -4,9 +4,9 @@ import com.patrickhogg.murdermystery.model.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * @author Patrick Hogg
@@ -18,13 +18,9 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
         List<File> fileList = new LinkedList<>();
         File folder = new File(pathName);
         if (folder.isDirectory()) {
-            File[] files = folder.listFiles();
+            File[] files = folder.listFiles(File::isFile);
             if (files != null) {
-                for (File file : files) {
-                    if (file.isFile()) {
-                        fileList.add(file);
-                    }
-                }
+                fileList.addAll(Arrays.asList(files));
             }
         }
         return fileList;
@@ -32,19 +28,20 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
 
     @Override
     public File getFileFromPath(String pathName, String fileName) {
-        for (File file : getFilesFromPath(pathName)) {
-            if (file.getName().equalsIgnoreCase(fileName)) {
-                return file;
-            }
-        }
-        return null;
+        List<File> files = getFilesFromPath(pathName);
+        return files.stream()
+                    .filter(file -> file.getName().equalsIgnoreCase(fileName))
+                    .findFirst()
+                    .orElse(null);
     }
 
     @Override
-    public DialogueList getDialogueListFromFile(InputStream file, HttpSession session) {
+    public DialogueList getDialogueListFromFile(InputStream file,
+                                                HttpSession session) {
         DialogueList dialogueList = new DialogueList();
         Player player = (Player) session.getAttribute("player");
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(file))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] dialogueText = line.split("\\R");
@@ -64,7 +61,8 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
     @Override
     public EventList getEventListFromFile(InputStream file) {
         EventList eventList = new EventList();
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(file))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] eventText = line.split(",");
@@ -103,23 +101,21 @@ public class ResourceFileReaderImpl implements ResourceFileReader {
     }
 
     @Override
-    public String replaceTemplateString(String pattern, String text,
+    public String replaceTemplateString(String text, String pattern,
                                         String replacement) {
-        Pattern p = Pattern.compile(pattern);
-        return p.matcher(text).replaceAll(
-                m -> m.group().replaceAll(pattern, replacement));
+        return text.replaceAll(pattern, replacement);
     }
 
     @Override
     public String filterInputString(Player player, String input) {
-        String nameReplace = replaceTemplateString("\\[[insert]+ [name]+]",
-                                                   input, player.getName());
-
-        String ageReplace = replaceTemplateString("\\[[insert]+ [age]+]",
-                                                  nameReplace, String.valueOf(
-                        player.getAge()));
-
-        return replaceTemplateString("\\[[insert]+ [profession]+]", ageReplace,
+        String nameReplace = replaceTemplateString(input,
+                                                   "\\[[insert]+ [name]+]",
+                                                   player.getName());
+        String ageReplace = replaceTemplateString(nameReplace,
+                                                  "\\[[insert]+ [age]+]",
+                                                  String.valueOf(
+                                                          player.getAge()));
+        return replaceTemplateString(ageReplace, "\\[[insert]+ [profession]+]",
                                      String.valueOf(player.getProfession()));
     }
 }
