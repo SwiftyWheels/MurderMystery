@@ -41,54 +41,49 @@ function init() {
 
     async function fetchDialogue(name) {
         name = name.toLowerCase();
-        const endPoint = "/api/dialogue/getPersonDialogue/" + name;
+        const endPoint = `/api/dialogue/getPersonDialogue/${name}`;
         try {
             const response = await fetch(endPoint);
-            if (response.ok) {
-                if (dialogueParagraph) {
-                    const json = await response.json();
-                    const text = json.text;
-                    const id = json.id;
-                    dialogueParagraph.innerText = text;
-                    dialogueParagraph.dataset.id = id;
-                    currentImg.src = "/imgs/characters/" + name + "/" + id + ".jpg";
-                }
+            if (!response.ok) {
+                new Error(response.statusText);
             }
+
+            const json = await response.json();
+            if (!dialogueParagraph) return;
+
+            dialogueParagraph.innerText = json.text;
+            dialogueParagraph.dataset.id = json.id;
+            currentImg.src = `/imgs/characters/${name}/${json.id}.jpg`;
         } catch (e) {
             let p = document.createElement("p");
-            p.innerText = await e.text();
+            p.innerText = e.message;
             p.appendChild(p);
         }
     }
 
     async function updateNotes(text) {
         const endPoint = "/api/notes/setNoteText/" + text;
-        try {
-            const response = await fetch(endPoint);
-            if (response.ok) {
-            }
-        } catch (e) {
-            console.log("Could not update notes!");
+        const response = await fetch(endPoint);
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
         }
     }
 
     async function updateInventory() {
         const endPoint = "/api/inventory/getInventoryItems";
-        try {
-            const response = await fetch(endPoint);
-            if (response.ok) {
-                const json = await response.json();
-                const inventory = json.itemList;
+        const response = await fetch(endPoint);
 
-                removeInventoryItems();
-
-                for (const inventoryElement of inventory) {
-                    createInventoryItemElement(inventoryElement.itemName);
-                }
-            }
-        } catch (e) {
-            console.log(e);
+        if (!response.ok) {
+            throw new Error(response.statusText);
         }
+
+        const json = await response.json();
+        const inventory = json.itemList;
+
+        await removeInventoryItems();
+
+        await inventory.map((element) => createInventoryItemElement(element.itemName));
     }
 
     function createInventoryItemElement(text) {
@@ -151,9 +146,9 @@ function init() {
             case 68 : {
                 if (hasItem("Knife")) {
                     createEventButton("narrator", 71, "Attack Mom", "");
-                }else if (hasItem("Lamp")) {
+                } else if (hasItem("Lamp")) {
                     createEventButton("narrator", 76, "Attack Mom", "");
-                }else{
+                } else {
                     createEventButton("narrator", 69, "Attack Mom", "");
                 }
 
@@ -278,25 +273,28 @@ function init() {
     /* Creates a button with an event handler. The button when clicked will send an api call to the URL.
      * The button will also skip to the dialogue id provided in the arguments.*/
     function createEventButton(name, id, optionContent, url) {
-        console.log("Creating button!");
         const button = document.createElement("button");
         button.id = id;
         button.innerText = optionContent;
 
         button.addEventListener("click", async () => {
-            if (url) {
-                const urlEvent = await fetch(url).then(async () => {
-                    await skipToScene(name, id);
-                }).catch();
-            } else {
+
+            if (!url) {
                 await skipToScene(name, id);
             }
+
+            if (url) {
+                await fetch(url).then(async () => {
+                    await skipToScene(name, id);
+                }).catch();
+            }
         });
+
         dialogueOptions.appendChild(button);
     }
 
     async function skipToScene(name, id) {
-        const endPoint = "/api/dialogue/skipToDialogue/" + name + "/" + id;
+        const endPoint = `/api/dialogue/skipToDialogue/${name}/${id}`;
         return await fetch(endPoint).then(response => response.text()).then(() => updateScene()).catch();
     }
 
@@ -305,19 +303,13 @@ function init() {
     }
 
     async function hasFlag(flagName) {
-        const result = await callAPI("/api/storyFlag/getStoryFlagValue/" + flagName);
-        console.log(result);
-        if (result) {
-            return result;
-        }
-        return false;
+        return await callAPI(`/api/storyFlag/getStoryFlagValue/${flagName}`);
     }
 
     function hasItem(itemName) {
         if (inventoryList) {
             for (const inventoryListElement of inventoryList.children) {
-                if (inventoryListElement.innerText === itemName) {
-                    console.log("Has Item: " + itemName);
+                if (inventoryListElement.innerText.includes(itemName)) {
                     return true;
                 }
             }
@@ -354,9 +346,8 @@ function init() {
         return value === "true";
     }
 
-    function createRestartButton(){
+    function createRestartButton() {
         if (dialogueOptions) {
-            console.log("Creating restart button");
             let button = document.createElement("button");
             button.innerText = "Restart";
             button.addEventListener("click", () => location.reload());
